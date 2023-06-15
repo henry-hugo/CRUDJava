@@ -1,0 +1,24 @@
+<main class="container">
+	<div class="d-flex justify-content-center">
+		<h1>Cadastrar Novo Usuário</h1>
+	</div>
+	
+	<form  action="addusuario.jsp" method="post">
+	<label class="form-label">Nome</label>
+	<input  class="form-control" type="text" name="nome">
+	<br>
+	<label>Email</label>
+	<input  class="form-control" type="email" name="email">
+	<br>
+	<label>Senha</label>
+	<input  class="form-control" type="password" name="senha">
+	<br>
+	<label class="form-label">Nivel</label>
+	<input type="radio" name="nivel" value="0"> Usuario
+	<input type="radio" name="nivel" value="1"> Administrador
+	<br>
+	<input type="submit" value="Enviar">
+</form>
+</main>
+
+
