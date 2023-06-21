@@ -167,7 +167,7 @@ public class ChamadaDao {
 														                    "WHERE c.id_usuario = ? AND DATE_FORMAT(c.data_hora_inicio, '%Y-%m-%d') = ?");
 			ps.setInt(1, idUsuario);
 			ps.setString(2, data);
-	        //System.out.println("Query: " + ps.toString()); // Log da consulta SQL para verificar o que está sendo enviado
+	        System.out.println("Query: " + ps.toString()); // Log da consulta SQL para verificar o que está sendo enviado
 	        ResultSet rs = ps.executeQuery();
 
 	        while (rs.next()) {

@@ -76,7 +76,7 @@ if(username == null){
 		    </tr>
 		  </thead>
 		  <%
-				List<Chamada> list = ChamadaDao.historico(idUsuario);
+				List<Chamada> list =  ChamadaDao.listDate(idUsuario, data);
 				request.setAttribute("list", list);
 			%>
 		  <tbody>
