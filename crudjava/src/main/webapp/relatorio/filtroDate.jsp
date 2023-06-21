@@ -2,6 +2,7 @@
 <%@ page import="com.crudjava.dao.ClienteDao, com.crudjava.bean.*, java.util.*"%>
 <%@ page import="com.crudjava.dao.ChamadaDao, com.crudjava.bean.*, java.util.*"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%
 HttpSession logout = request.getSession();
 Usuario username = (Usuario) request.getSession().getAttribute("usuario");;
@@ -9,8 +10,6 @@ if(username == null){
 	response.sendRedirect("../login.jsp");
 }else if(username.getNivel() == 1){
 %>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -20,7 +19,7 @@ if(username == null){
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<title>visualização de Relatorios</title>
+<title>Visualização de Relatórios</title>
 </head>
 <body>
 	
@@ -32,12 +31,9 @@ if(username == null){
 	%>
 	<%
 	  int idUsuario = Integer.parseInt(request.getParameter("id"));
-	  List<Chamada> chamadas = ChamadaDao.historico(idUsuario);
+	  String data = request.getParameter("data");
+	  List<Chamada> chamadas = ChamadaDao.listDate(idUsuario, data);
 	%>
-	
-	
-	
-	
 	
 	<header class="container">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -63,77 +59,42 @@ if(username == null){
 					<a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a>
 				</li>
 			</ul>
-
 		</nav>
 	</header>
+	
 	<section class="container">
-        <p></p>
-        <form action="filtroDate.jsp" method="get">
-		    <div class="row mb-3">
-		        <div class="col-auto">
-		            <input type="hidden" name="id" value="<%= idUsuario %>">
-		            <input type="date" class="form-control form-control-sm" name="data" placeholder="Data">
-		        </div>
-		        <div class="col-auto">
-		            <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
-		        </div>
-		    </div>
-		</form>
-    </section>
-	<section class="container">
-	<p></p>
-		<table  class="table table-dark table-striped" >
-			<tr>
-				<th>
-					id
-				</th>
-				<th>
-					cliente
-				</th>
-				<th>
-					usuario
-				</th>
-				<th>
-					data inicio
-				</th>
-				<th>
-					data final
-				</th>
-				<th>
-					resultado
-				</th>
-			</tr>
-			<%
+		<p></p>
+		<table class="table table-dark table-striped">
+		  <thead>
+		    <tr>
+		      <th>ID</th>
+		      <th>Cliente</th>
+		      <th>Usuário</th>
+		      <th>Data Início</th>
+		      <th>Data Final</th>
+		      <th>Resultado</th>
+		    </tr>
+		  </thead>
+		  <%
 				List<Chamada> list = ChamadaDao.historico(idUsuario);
 				request.setAttribute("list", list);
 			%>
-			
-			
-			<c:forEach items="${list}" var="chamada">
-				<tr>
-					<td>
-						${chamada.getId_chamada()}
-					</td>
-					<td>
-						${chamada.getNome_cliente()}
-					</td>
-					<td>
-						${chamada.getNome_usuario()}
-					</td>
-					<td>
-						${chamada.getData_hora_inicio()}
-					</td>
-					<td>
-						${chamada.getData_hora_final()}
-					</td>
-					<td>
-						${chamada.getResultado()}
-					</td>
-				</tr>
-			</c:forEach>
+		  <tbody>
+		    <c:forEach items="${list}" var="chamada">
+		      <tr>
+		        <td>${chamada.id_chamada}</td>
+		        <td>${chamada.nome_cliente}</td>
+		        <td>${chamada.nome_usuario}</td>
+		        <td>${chamada.data_hora_inicio}</td>
+		        <td>${chamada.data_hora_final}</td>
+		        <td>${chamada.resultado}</td>
+		      </tr>
+		    </c:forEach>
+		  </tbody>
 		</table>
-		<a type="submit" class="btn" href="viewrelatorios.jsp">Voltar</a>
-		</section>
+		<a href="viewrelatorios.jsp" class="btn">Voltar</a>
+	</section>
 	
-<%}else{ %><jsp:include page="../index.jsp"></jsp:include>
+<%}else{ %>
+	<jsp:include page="../index.jsp"></jsp:include>
 <%} %>

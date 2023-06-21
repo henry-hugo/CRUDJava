@@ -1,6 +1,7 @@
 package com.crudjava.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -134,7 +135,7 @@ public class ChamadaDao {
 	}
 	
 	
-	public static int getQuantidadeChamadasPorData(java.sql.Date data) {
+	public static int getQuantidadeChamadasPorData(Date data) {
 	    int quantidade = 0;
 	    ResultSet resultSet = null;
 
@@ -153,6 +154,42 @@ public class ChamadaDao {
 
 	    return quantidade;
 	}
+
+	public static List<Chamada> listDate(int idUsuario, String data) {
+	    List<Chamada> list = new ArrayList<>();
+
+	    try {
+	        Connection con = ConnectionDao.getConnection();
+	        PreparedStatement ps = (PreparedStatement) con.prepareStatement("SELECT c.*, u.nome AS nome_usuario, cl.nome AS nome_cliente " +
+														                    "FROM chamada c " +
+														                    "INNER JOIN usuario u ON c.id_usuario = u.id " +
+														                    "INNER JOIN cliente cl ON c.id_cliente = cl.id_cliente " +
+														                    "WHERE c.id_usuario = ? AND DATE_FORMAT(c.data_hora_inicio, '%Y-%m-%d') = ?");
+			ps.setInt(1, idUsuario);
+			ps.setString(2, data);
+	        //System.out.println("Query: " + ps.toString()); // Log da consulta SQL para verificar o que está sendo enviado
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            Chamada chamada = new Chamada();
+	            chamada.setId_chamada(rs.getInt("id_chamada"));
+	            chamada.setNome_cliente(rs.getString("nome_cliente"));
+	            chamada.setNome_usuario(rs.getString("nome_usuario"));
+	            chamada.setData_hora_inicio(rs.getTimestamp("data_hora_inicio"));
+	            chamada.setData_hora_final(rs.getTimestamp("data_hora_final"));
+	            chamada.setResultado(rs.getString("resultado"));
+
+	            list.add(chamada);
+	        }
+	        System.out.println("Chamadas encontradas: " + list.size());
+	    } catch (Exception e) {
+	        System.out.println(e);
+	    }
+
+	    return list;
+	}
+
+
 
 
 }
